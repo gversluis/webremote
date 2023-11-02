@@ -1,0 +1,3 @@
+# move this file for example to: /etc/sudoers.d/100_webremote
+www-data ALL = (username) NOPASSWD: /var/www/remote/data/remote.sh
+

@@ -1,0 +1,16 @@
+{
+	"$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "background_color": "white",
+  "description": "Web Remote",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "416x416",
+      "type": "image/png"
+    }
+  ],
+  "name": "Web Remote",
+  "short_name": "WebRemote",
+	"start_url": "/remote/"
+}

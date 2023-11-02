@@ -1,0 +1,300 @@
+{
+	"exec": "/var/www/remote/data/remote.sh",
+	"buttons": {
+		"power": {
+			"on": {
+				"text": "⊚",
+				"icon": null,
+				"exec": "if [ $(audtool version | grep Aud -c) -ne 0 ]; then killall audacious; else /home/gec/Music/play.sh; fi"
+			},
+			"off": {
+				"text": "⦿",
+				"icon": null,
+				"exec": null
+			}
+		},
+		"status": {
+			"icon": {
+				"text": "★",
+				"icon": null,
+				"exec": null
+			},
+			"text": {
+				"text": "Now playing...",
+				"icon": null,
+				"exec": "audtool current-song"
+			}
+		},
+		"direction": {
+			"rewind": {
+				"text": "⏪",
+				"icon": null,
+				"exec": "audtool playback-seek-relative -8"
+			},
+			"stop": {
+				"text": "⏹",
+				"icon": null,
+				"exec": "killall audacious; ~/kodi.sh quit; sleep 10 && killall -9 kodi.bin"
+			},
+			"playpause": {
+				"text": "⏯",
+				"icon": null,
+				"exec": "audtool playback-playpause; ~/kodi.sh playpause"
+			},
+			"forward": {
+				"text": "⏩",
+				"icon": null,
+				"exec": "audtool playback-seek-relative +8"
+			}
+		},
+		"channel": {
+			"up": {
+				"text": "P +",
+				"icon": null,
+				"exec": "audtool playlist-advance"
+			},
+			"down": {
+				"text": "P -",
+				"icon": null,
+				"exec": "audtool playlist-reverse"
+			}
+		},
+		"volume": {
+			"up": {
+				"text": "vol +",
+				"icon": null,
+				"exec": "audtool set-volume +10"
+			},
+			"down": {
+				"text": "vol -",
+				"icon": null,
+				"exec": "audtool set-volume -10"
+			},
+			"mute": {
+				"text": "MUTE",
+				"icon": null,
+				"exec": null
+			}
+		},
+		"navigate": {
+			"shortcuts": {
+				"exit": {
+					"text": "exit",
+					"icon": null,
+					"exec": null
+				},
+				"info": {
+					"text": "info",
+					"icon": null,
+					"exec": null
+				},
+				"tools": {
+					"text": "tools",
+					"icon": null,
+					"exec": null
+				},
+				"menu": {
+					"text": "menu",
+					"icon": null,
+					"exec": "~/kodi.sh input ContextMenu"
+				},
+				"guide": {
+					"text": "guide",
+					"icon": null,
+					"exec": null
+				},
+				"home": {
+					"text": "home",
+					"icon": null,
+					"exec": null
+				},
+				"src": {
+					"text": "src",
+					"icon": null,
+					"exec": null
+				}
+			},
+			"arrows": {
+				"back": {
+					"text": "⏎",
+					"icon": null,
+					"exec": "~/kodi.sh input Back"
+				},
+				"ok": {
+					"text": "⎆",
+					"icon": null,
+					"exec": "~/kodi.sh input Select"
+				},
+				"up": {
+					"text": "▲",
+					"icon": null,
+					"exec": "~/kodi.sh input Up"
+				},
+				"right": {
+					"text": "▶",
+					"icon": null,
+					"exec": "~/kodi.sh input Right"
+				},
+				"down": {
+					"text": "▼",
+					"icon": null,
+					"exec": "~/kodi.sh input Down"
+				},
+				"left": {
+					"text": "◀",
+					"icon": null,
+					"exec": "~/kodi.sh input Left"
+				}
+			}
+		},
+		"services": {
+			"netflix": {
+				"text": "netflix",
+				"icon": null,
+				"exec": null
+			},
+			"prime": {
+				"text": "prime",
+				"icon": null,
+				"exec": null
+			},
+			"disney": {
+				"text": "disney",
+				"icon": null,
+				"exec": null
+			},
+			"youtube": {
+				"text": "youtube",
+				"icon": null,
+				"exec": null
+			},
+			"hbo": {
+				"text": "hbo",
+				"icon": null,
+				"exec": null
+			},
+			"nlziet": {
+				"text": "nlziet",
+				"icon": null,
+				"exec": null
+			},
+			"npo": {
+				"text": "npo",
+				"icon": null,
+				"exec": null
+			},
+			"videoland": {
+				"text": "videoland",
+				"icon": null,
+				"exec": null
+			},
+			"pathe": {
+				"text": "pathe",
+				"icon": null,
+				"exec": null
+			}
+		},
+		"programs": {
+			"kodi": {
+				"text": "kodi",
+				"icon": null,
+				"exec": "if [[ $(pidof kodi.bin) ]]; then echo \"Quiting kodi\" && ~/kodi.sh quit; else echo \"Starting kodi\" && kodi; fi"
+			},
+			"tv": {
+				"text": "📺",
+				"icon": null,
+				"exec": "~/kodi.sh res 1920x1080p"
+			},
+			"beamer": {
+				"text": "📽",
+				"icon": null,
+				"exec": "~/kodi.sh res 1024x768"
+			},
+			"screensaver": {
+				"text": "screensaver",
+				"icon": null,
+				"exec": null
+			}
+		},
+		"channels": {
+			"nr1": {
+				"text": "nr1",
+				"icon": null,
+				"exec": null
+			},
+			"nr2": {
+				"text": "nr2",
+				"icon": null,
+				"exec": null
+			},
+			"nr3": {
+				"text": "nr3",
+				"icon": null,
+				"exec": null
+			},
+			"nr4": {
+				"text": "nr4",
+				"icon": null,
+				"exec": null
+			},
+			"nr5": {
+				"text": "nr5",
+				"icon": null,
+				"exec": null
+			},
+			"nr6": {
+				"text": "nr6",
+				"icon": null,
+				"exec": null
+			},
+			"nr7": {
+				"text": "nr7",
+				"icon": null,
+				"exec": null
+			},
+			"nr8": {
+				"text": "nr8",
+				"icon": null,
+				"exec": null
+			},
+			"nr9": {
+				"text": "nr9",
+				"icon": null,
+				"exec": null
+			},
+			"nr0": {
+				"text": "nr0",
+				"icon": null,
+				"exec": null
+			}
+		},
+		"ttx": {
+			"display": {
+				"text": "ttx",
+				"icon": null,
+				"exec": null
+			},
+			"red": {
+				"text": "red",
+				"icon": null,
+				"exec": null
+			},
+			"yellow": {
+				"text": "yellow",
+				"icon": null,
+				"exec": null
+			},
+			"green": {
+				"text": "green",
+				"icon": null,
+				"exec": null
+			},
+			"blue": {
+				"text": "blue",
+				"icon": null,
+				"exec": null
+			}
+		}
+  }
+}
+
