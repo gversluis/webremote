@@ -6,13 +6,18 @@ export LANG=C.UTF-8
 #amixer -c 2
 #whoami
 
+if [ "$1" == "" ]; then
+	>&2 echo "Syntax: $0 <command from remote.json>"
+	exit
+fi;
+
 export DBUS_SESSION_BUS_ADDRESS=$( grep -osPahm1 "\0DBUS_SESSION_BUS_ADDRESS=[^\0]+" /proc/*/environ | tail -n1 | cut -d= -f2- )
 #echo "$1 Execute $EXEC";
 # pick highest display nr. because thats probably started latest
 export DISPLAY=$( grep -osPahm1 "\0DISPLAY=:[\d\.]+" /proc/*/environ | sort | tail -n1 | cut -d= -f2- )
 EXEC=$(jq -r ".buttons.$1.exec" data/remote.json)
 if [[ ( -n "$EXEC" ) && ( "$EXEC" != "null" ) ]]; then
-#	echo "Execute $EXEC"
+  #	echo "Execute $EXEC"
 	export OUTPUT=$(eval "$EXEC")
 else
   >&2 echo "Command for $1 not found"
