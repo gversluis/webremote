@@ -75,7 +75,7 @@
 	<title>Remote status</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="refresh" content="<?=$refresh?>;url=?action=status">
+	<meta http-equiv="refresh" content="<?=$refresh?>;url=?action=status.text">
 	<title>Remote</title>
 	<link rel="icon" type="image/x-icon" href="favicon.png">
 	<style>
@@ -145,7 +145,7 @@ body {
 	</div>
 	<script type="text/javascript">
 		setTimeout(function() {
-			window.location = "?action=status";
+			window.location = "?action=status.text";
 		}, <?=$refresh*1000?>);
 	</script>
 </body>
