@@ -6,31 +6,26 @@ export LANG=C.UTF-8
 #amixer -c 2
 #whoami
 
-# export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
-for f in /proc/*
-do
-	export DBUS_SESSION_BUS_ADDRESS=$( grep -zsP "^DBUS_SESSION_BUS_ADDRESS=.+" ${f}/environ|cut -d= -f2-| tr -d '\0')
-	if [ "$DBUS_SESSION_BUS_ADDRESS" != "" ]; then
-		break
-	fi
-done
-# echo "$DBUS_SESSION_BUS_ADDRESS"
-
-export DISPLAY=:0.0
+export DBUS_SESSION_BUS_ADDRESS=$( grep -osPahm1 "\0DBUS_SESSION_BUS_ADDRESS=[^\0]+" /proc/*/environ | tail -n1 | cut -d= -f2- )
+#echo "$1 Execute $EXEC";
+# pick highest display nr. because thats probably started latest
+export DISPLAY=$( grep -osPahm1 "\0DISPLAY=:[\d\.]+" /proc/*/environ | sort | tail -n1 | cut -d= -f2- )
 EXEC=$(jq -r ".buttons.$1.exec" data/remote.json)
-# echo "Execute $EXEC";
-$(eval "$EXEC")
+if [[ ( -n "$EXEC" ) && ( "$EXEC" != "null" ) ]]; then
+#	echo "Execute $EXEC"
+	export OUTPUT=$(eval "$EXEC")
+else
+  >&2 echo "Command for $1 not found"
+fi
 CURRENTSONG=$(audtool current-song)
 # move pinguin radio stuff to the end on a new line
-CURRENTSONG=`echo $CURRENTSONG | perl -pe 's/(p[ei]nguin [a-zA-Z0-9_\- ]+)( - )(.*)/$3\n$1/ig'`
-# CURRENTSONG=`echo $CURRENTSONG | perl -pe 's/(the rocks)( - )?(.*)/$3\n$1/ig'`
+CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/(p[ei]nguin [a-zA-Z0-9_\- ]+)( - )(.*)/$3\n$1/ig' )
 # remove urls
-CURRENTSONG=`echo $CURRENTSONG | perl -pe 's/([0-9a-z\.]+\.com)( - )?//ig'`
+CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/([0-9a-z\.]+\.com)( - )?//ig' )
 # change pinguin text to icon
-CURRENTSONG=`echo $CURRENTSONG | perl -pe 's/(.*)(p[ei]nguin)/$1\n\x{1F427}/ig'`
+CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/(.*)(p[ei]nguin)/$1\n\x{1F427}/ig' )
 DURATION=$(audtool current-song-length-seconds)
 SECONDSPROGRESS=$(audtool current-song-output-length-seconds)
-# |Pinguin[A-Za-z][0-9]{3}\) ]];
 if [[ $DURATION -eq "0" ]]; then
 #	CURRENTSONG="$CURRENTSONG $DURATION $SECONDSPROGRESS"
   DURATION=$(($SECONDSPROGRESS+10))
@@ -41,8 +36,7 @@ if [[ $CURRENTSONG =~ (listen\?|Pinguin[A-Za-z]{1,}[0-9]{3}) ]]; then
   SECONDSPROGRESS=0
 fi
 NOWPLAYINGLENGTHLEFT=$DURATION-$SECONDSPROGRESS
-
-jq --ascii-output -n \
+jq -n \
   --arg user "$(whoami)" \
 	--arg command "$1" \
 	--arg executed "$EXEC" \
