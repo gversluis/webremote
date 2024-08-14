@@ -11,10 +11,13 @@ if [ "$1" == "" ]; then
 	exit
 fi;
 
-export DBUS_SESSION_BUS_ADDRESS=$( grep -osPahm1 "\0DBUS_SESSION_BUS_ADDRESS=[^\0]+" /proc/*/environ | tail -n1 | cut -d= -f2- )
+# get environment variables
+# by sorting we get the hightest values, because these probably started latest
+# if you get WAYLAND_SOCKET wlr-randr stops working most of the time
+eval $(grep -osPahm1 "\0(WAYLAND_DISPLAY|DBUS_[A-Z_]+|XDG_[A-Z_]+|DISPLAY)=[^\0]+" /proc/*/environ | cut -d= -f1- | sort | uniq | tr -d '\0' | sed 's/^/export /g')
+[ "$WAYLAND_DISPLAY" != "" ] || WAYLAND_DISPLAY=$(ls $XDG_RUNTIME_DIR/wayland-[0-9])
+
 #echo "$1 Execute $EXEC";
-# pick highest display nr. because thats probably started latest
-export DISPLAY=$( grep -osPahm1 "\0DISPLAY=:[\d\.]+" /proc/*/environ | sort | tail -n1 | cut -d= -f2- )
 EXEC=$(jq -r ".buttons.$1.exec" data/remote.json)
 if [[ ( -n "$EXEC" ) && ( "$EXEC" != "null" ) ]]; then
   #	echo "Execute $EXEC"
@@ -31,6 +34,7 @@ CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/([0-9a-z\.]+\.com)( - )?//ig' 
 CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/(.*)(p[ei]nguin)/$1\n\x{1F427}/ig' )
 DURATION=$(audtool current-song-length-seconds)
 SECONDSPROGRESS=$(audtool current-song-output-length-seconds)
+# OUTPUT=$(/usr/bin/pactl -s /run/user/1000/pulse/native get-default-sink)
 if [[ $DURATION -eq "0" ]]; then
 #	CURRENTSONG="$CURRENTSONG $DURATION $SECONDSPROGRESS"
   DURATION=$(($SECONDSPROGRESS+10))
