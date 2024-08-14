@@ -5,7 +5,7 @@
 			"on": {
 				"text": "⊚",
 				"icon": null,
-				"exec": "if [ $(audtool version | grep Aud -c) -ne 0 ]; then killall audacious; else /home/gec/Music/play.sh; fi"
+				"exec": "if [ $(audtool version | grep Aud -c) -ne 0 ]; then killall audacious; else ~/Music/play.sh & fi"
 			},
 			"off": {
 				"text": "⦿",
@@ -63,12 +63,12 @@
 			"up": {
 				"text": "vol +",
 				"icon": null,
-				"exec": "audtool set-volume +10"
+				"exec": "if [ $( pactl get-sink-volume @DEFAULT_SINK@  | grep -os '[0-9]*%'  | sort -h | tail -n 1 | grep -o '[0-9]*' ) -lt 100 ]; then pactl set-sink-volume @DEFAULT_SINK@ +10%; fi"
 			},
 			"down": {
 				"text": "vol -",
 				"icon": null,
-				"exec": "audtool set-volume -10"
+				"exec": "pactl set-sink-volume @DEFAULT_SINK@ -10%"
 			},
 			"mute": {
 				"text": "MUTE",
@@ -198,17 +198,22 @@
 			"kodi": {
 				"text": "kodi",
 				"icon": null,
-				"exec": "if [[ $(pidof kodi.bin) ]]; then echo \"Quiting kodi\" && ~/kodi.sh quit; else echo \"Starting kodi\" && kodi; fi"
+				"exec": "if [[ $(pidof kodi.bin) ]]; then echo \"Quiting kodi\" && ~/kodi.sh quit; else echo \"Starting kodi\" && kodi --standalone -fs; fi"
 			},
 			"tv": {
 				"text": "📺",
 				"icon": null,
-				"exec": "~/kodi.sh res 1920x1080p"
+				"exec": "~/tv.sh; ~/kodi.sh res 1920x1080"
 			},
 			"beamer": {
 				"text": "📽",
 				"icon": null,
-				"exec": "~/kodi.sh res 1024x768"
+				"exec": "~/beamer.sh; ~/kodi.sh res 1024x768"
+			},
+			"restart": {
+				"text": "↻",
+				"icon": null,
+				"exec": "restartlightdm"
 			},
 			"screensaver": {
 				"text": "screensaver",
