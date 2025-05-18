@@ -1,15 +1,35 @@
 <?php
+	set_error_handler(function(int $errno, string $errstr) {
+		if (strpos($errstr, 'Undefined array key') === false) {
+			return false;
+		} else {
+			return true;
+		}
+	}, E_WARNING);
+
 	$json = [];
 	$action = $_GET['action'];
 	$output = asyncExec($action, 1);
-	if (stristr($_SERVER['HTTP_ACCEPT'], '/json')) {
+	if (stristr($_SERVER['HTTP_ACCEPT'], '/json') || stristr($_GET['output'], 'json')) {
 		header('Content-Type: application/json');
 		print $output;
 		exit;
+	} else if (stristr($_GET['output'], 'text')) {
+		$json = json_decode($output, true, JSON_INVALID_UTF8_SUBSTITUTE);
+		header('Content-Type: text/plain');
+		if (!$json['audacity'] && !$json['kodi']) {
+			print "Nothing playing";
+		} else if (!$json['audacity']) {
+			print 'Kodi?';
+		} else {
+			$output = $json['nowplaying'].' '.$json['progress'].'%';
+			print str_replace("\n", "            ", $output);
+		}
+		exit;
 	} else {
 		$json = json_decode($output, true, JSON_INVALID_UTF8_SUBSTITUTE);
-		if (!$json['duration']) $json['duration'] = 0.01;	// so we don't devide by 0
-		if (!$json['progress']) $json['progress'] = 0.01;	// so we don't devide by 0
+		if (!isset($json['duration']) || !$json['duration']) $json['duration'] = 0.01;	// so we don't devide by 0
+		if (!isset($json['progress']) || !$json['progress']) $json['progress'] = 0.01;	// so we don't devide by 0
 		$refresh = $json['duration']-$json['progress'];
 		if ($refresh <= 0) $refresh = 600; // when song ends
 	}
