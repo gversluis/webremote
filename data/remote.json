@@ -203,12 +203,12 @@
 			"tv": {
 				"text": "📺",
 				"icon": null,
-				"exec": "~/tv.sh; ~/kodi.sh res 1920x1080"
+				"exec": "~/tv.sh; ~/kodi.sh wake && ~/kodi.sh res 1920x1080 && sleep 4 && ~/kodi.sh input Left && ~/kodi.sh input Select"
 			},
 			"beamer": {
 				"text": "📽",
 				"icon": null,
-				"exec": "~/beamer.sh; ~/kodi.sh res 1024x768"
+				"exec": "~/beamer.sh; ~/kodi.sh wake && ~/kodi.sh res 1024x768 && sleep 4 && ~/kodi.sh input Left && ~/kodi.sh input Select"
 			},
 			"restart": {
 				"text": "↻",
