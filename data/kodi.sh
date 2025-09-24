@@ -19,6 +19,15 @@ quit)
 	curl -u "$kodi_username:$kodi_password" -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "Application.Quit", "id": 1}' $kodi_host
 ;;
 
+current)
+  playerid=$(curl --silent -u "$kodi_username:$kodi_password" -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "Player.GetActivePlayers", "id": 1}' $kodi_host | jq '.result[].playerid')
+	if [[ -n "$playerid" ]]; then
+	  curl --silent -u "$kodi_username:$kodi_password" -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "Player.GetItem", "params": { "properties": ["title", "runtime", "duration"], "playerid": '"$playerid"' }, "id": "GetItem"}' $kodi_host | jq -r '"Kodi: \(.result.item.title) (\((.result.item.duration // .result.item.runtime) / 60 | floor):\((.result.item.duration // .result.item.runtime) % 60 | floor))"'
+	else
+		curl --silent -u "$kodi_username:$kodi_password" -X POST -H "Content-Type: application/json" -d '{"jsonrpc": "2.0", "method": "GUI.GetProperties", "params": {"properties":["currentwindow", "currentcontrol", "fullscreen"]}, "id": 1 }' $kodi_host | jq -r '"Kodi: \(.result.currentcontrol.label // .result.currentwindow.label)"'
+	fi
+;;
+
 res)
 	kodi_resolution=$2
 	echo "request resolution $kodi_resolution"
@@ -35,7 +44,7 @@ res)
 ;;
 
 *)
-	echo "Syntax: $0 <quit|res> <value>"
+	echo "Syntax: $0 <quit|current|res|wake|input|playpause> <value>"
 ;;
 
 esac

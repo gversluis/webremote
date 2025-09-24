@@ -27,11 +27,14 @@ else
 fi
 CURRENTSONG=$(audtool current-song)
 # move pinguin radio stuff to the end on a new line
-CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/(p[ei]nguin [a-zA-Z0-9_\- ]+)( - )(.*)/$3\n$1/ig' )
+CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/(p[ei]nguin [a-zA-Z0-9_\- ]+)( - )(.*?)(Kodi: |$)/$3\n$1$2/ig' )
 # remove urls
 CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/([0-9a-z\.]+\.com)( - )?//ig' )
 # change pinguin text to icon
 CURRENTSONG=$( echo $CURRENTSONG | perl -C -pe 's/(.*)(p[ei]nguin)/$1\n\x{1F427}/ig' )
+KODIPLAYING=$(~/kodi.sh current)
+[[ -z "$CURRENTSONG" ]] && CURRENTSONG=$KODIPLAYING || CURRENTSONG+=$'\n'"$KODIPLAYING"
+
 DURATION=$(audtool current-song-length-seconds)
 SECONDSPROGRESS=$(audtool current-song-output-length-seconds)
 # OUTPUT=$(/usr/bin/pactl -s /run/user/1000/pulse/native get-default-sink)
@@ -55,6 +58,6 @@ jq -n \
   --arg secondsprogress "$SECONDSPROGRESS" \
   --arg secondsleft "$NOWPLAYINGLENGTHLEFT" \
   --arg audacity "$(audtool version | grep Aud -c)" \
-	--arg	kodi "$(pidof kodi.bin)" \
+	--arg	kodi "$KODIPLAYING" \
 	'{ $command, $output, $nowplaying, $duration, progress: $secondsprogress, $kodi, $audacity}' 
 
