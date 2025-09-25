@@ -22,7 +22,7 @@
 			"text": {
 				"text": "Now playing...",
 				"icon": null,
-				"exec": ""
+				"exec": " "
 			}
 		},
 		"direction": {
