@@ -125,7 +125,7 @@ body {
 }
 
 .progress {
-	position: absolute;
+	position: fixed;
 	bottom: 4px;
 	width: 100%;
 }
